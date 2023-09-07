@@ -4,6 +4,7 @@ import { Toaster, toast } from 'sonner'
 import { z } from 'zod'
 import { Button } from './components/Button'
 import { Input } from './components/Input'
+import InputWithRegister from './components/InputWithRegister'
 import { DivSelect } from './components/Select2'
 
 const formSchema = z.object({
@@ -28,6 +29,10 @@ const formSchema = z.object({
   }),
 
   role: z.string(),
+
+  bio: z.string().min(3, {
+    message: 'Bio must be at least 3 characters long',
+  }),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -44,13 +49,13 @@ function App() {
       age: 0,
       email: '',
       role: 'user',
+      bio: '',
     },
     shouldUseNativeValidation: false,
   })
 
   const onSubmit: SubmitHandler<FormValues> = (values) => {
-    toast.success('Form submitted successfully')
-    console.log(values)
+    toast.success(JSON.stringify(values, null, 2))
   }
 
   count++
@@ -87,6 +92,12 @@ function App() {
         />
 
         <DivSelect control={form.control} name='role' values={[...roles]} />
+
+        <InputWithRegister
+          {...form.register('bio')}
+          error={form.formState.errors.bio?.message}
+          label='Bio'
+        />
 
         <div className='flex justify-center'>
           <Button type='submit' className='w-1/2 py-3'>
