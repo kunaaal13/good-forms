@@ -6,14 +6,22 @@ import {
 } from 'react-hook-form'
 import { cn } from '../utils'
 
+type SelectOptionType = {
+  value: string
+  label: string
+  sublabel?: string
+}
+
 type DivSelectProps = {
-  values: string[]
+  values: SelectOptionType[]
+  handleChange: (value: SelectOptionType) => string
+  renderOption: (value: SelectOptionType) => React.ReactNode
 }
 
 function DivSelect<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->(props: UseControllerProps<TFieldValues, TName> & DivSelectProps) {
+>(props: DivSelectProps & UseControllerProps<TFieldValues, TName>) {
   const control = useController(props)
 
   return (
@@ -23,7 +31,7 @@ function DivSelect<
         className='
           block 
           text-sm 
-          leading-6 
+          leading-6  
           text-gray-900
           mb-2
         '
@@ -36,18 +44,19 @@ function DivSelect<
           return (
             <button
               type='button'
-              key={value}
+              key={value.value}
               className={cn(
-                'py-3 px-4 w-1/3 rounded-md',
+                'py-3 px-5 rounded-md',
                 control.field.value === value
                   ? 'bg-black text-white'
                   : 'border text-gray-900'
               )}
               onClick={() => {
-                control.field.onChange(value)
+                const res = props.handleChange(value)
+                control.field.onChange(res)
               }}
             >
-              {value}
+              {props.renderOption(value)}
             </button>
           )
         })}

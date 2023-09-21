@@ -91,7 +91,36 @@ function App() {
           error={form.formState.errors.email?.message}
         />
 
-        <DivSelect control={form.control} name='role' values={[...roles]} />
+        <DivSelect
+          control={form.control}
+          name='role'
+          values={roles.map((role) => {
+            return {
+              label: role,
+              value: role,
+            }
+          })}
+          handleChange={(item) => {
+            return item.value
+          }}
+          renderOption={(item) => {
+            return <p>{item.label}</p>
+          }}
+        />
+
+        {/* <Select
+          name='role'
+          isSelected={(item) => {
+            return item === role
+          }}
+          onChange={(item) => {
+            setRole(item)
+          }}
+          options={[...roles]}
+          renderOption={(option) => <p>{option}</p>}
+          noOfColumns={3}
+          error={form.formState.errors.role?.message}
+        /> */}
 
         <InputWithRegister
           {...form.register('bio')}
